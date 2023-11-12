@@ -32,6 +32,11 @@ let text = "5";
 let padded = text.padStart(4, "0");
 console.log(padded); // 0005
 
+const shuffleButton = document.querySelector("#shuffle-button");
+const drawButton = document.querySelector("#draw-btn");
+const resetButton = document.querySelector("#reset-btn");
+const output = document.querySelector("#output");
+
 // ! We know the following information
 // cardNumber / 13 = 0 1 2 3
 // cardNumber % 13 = 2 3 4 5 6 7 8 9 10 Jack Queen King Ace
@@ -69,22 +74,30 @@ deck.sort(() => Math.random() - 0.5);
 const selectedCards = deck.slice(0, 4);
 
 // Display the information for each selected card
-let count = 0;
-selectedCards.forEach((cardNumber) => {
-  const suit = suits[Math.trunc(cardNumber / 13)];
-  const rank = ranks[cardNumber % 13];
-  count++;
-  console.log(`Card ${count}: ${rank} of ${suit}`);
+function drawFourCards() {
+  let count = 0;
+  selectedCards.forEach((cardNumber) => {
+    const suit = suits[Math.trunc(cardNumber / 13)];
+    const rank = ranks[cardNumber % 13];
+    count++;
+    let newParagraph = document.createElement("p");
+    // Add the text to the new element
+    newParagraph.appendChild(
+      document.createTextNode(`Card ${count}: ${rank} of ${suit}`)
+    );
+    // Append the new element to the parent element
+    output.appendChild(newParagraph);
+  });
+}
+
+function cleanOutput() {
+  output.innerHTML = "";
+}
+
+drawButton.addEventListener("click", () => {
+  drawFourCards();
 });
 
-// * Using a for loop
-console.log(`Using a for loop`)
-let countCard = 0;
-for (let i = 0; i < 4; i++) {
-  let suitOfCard = suits[Math.trunc(deck[i] / 13)];
-  let rank = ranks[deck[i] % 13];
-  let number = String((deck[i] % 13) + 1).padStart(2, "0");
-  countCard++;
-
-  console.log(`Card ${countCard} ${number}: ${rank} of ${suitOfCard}`);
-}
+resetButton.addEventListener("click", () => {
+  cleanOutput();
+});
